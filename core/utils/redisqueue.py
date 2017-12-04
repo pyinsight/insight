@@ -28,7 +28,7 @@ class RedisQueue(object):
         """Return front of queue"""
         if self.empty():
             raise Empty
-        return self.__db.lrange(self.key, 0, 0)
+        return self.__db.lrange(self.key, 0, 0)[0]
 
     def get(self, block=True, timeout=None):
         """Remove and return an item from the queue.

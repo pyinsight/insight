@@ -57,17 +57,16 @@ class Thread:
     """average the positivity or negativity of the whole thread"""
 
     def average_sentiments(self):
+        if self.submission.num_comments == 0:
+            return None
 
         total = 0.0
-        num_of_comments = 0
 
         for comment in self.comments:
-            num_of_comments += 1
-
             if comment.sentiment is "pos":
                 total += 1
 
-        average = total / num_of_comments
+        average = total / self.submission.num_comments
 
         return average
 
