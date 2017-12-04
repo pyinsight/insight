@@ -1,0 +1,39 @@
+html, body {
+  height:100%;
+}
+body {
+  display:flex;
+  align-items:center;
+}
+
+.search-box {
+    display: flex;
+    justify-content: center;
+     align-items:center;
+    position: relative;
+    outline: 1;
+    box-shadow: 0 0 10px #888888;
+    margin-bottom: 20em;
+
+}
+
+.search-box .fa {
+    position: absolute;
+    padding: 10px;
+    pointer-events: none;
+    left: 15px;
+    top: 0px;
+}
+.search-box .fa:before {
+    color: #888888;
+    transition: all 0.2s linear;
+}
+.search-box input {
+    color: #888888;
+    padding-left: 60px;
+    background: #FFF;
+    border:0;
+    outline: none !important;
+    transition: all 0.2s linear;
+}
+
