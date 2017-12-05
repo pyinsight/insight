@@ -1,62 +1,56 @@
-div.insight {
-    height: 10em;
-    position: relative }
-div.insight h1 {
-    margin: 0;
-    background: white;
-    position: absolute;
-    font-size: 5em;
-    font-weight: bold;
-    font-family: "Lucida Console", Monaco, monospace;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%) }
-
- .search-box {
-    display: flex;
-    justify-content: center;
-    align-items:center;
-    position: relative;
-    outline: 1;
-    box-shadow: 0 0 10px #888888;
-    margin-bottom: 20em;
-   
-
+body {
+  background-color: #ffffff;
 }
 
-.search-box .fa:before {
-    color: #888888;
-    transition: all 0.2s linear;
+.navbar-default {
+  max-height: 40px;
+  background-color: #ffffff !important;
+  border-color: #ecf0f1;
+  color: #696969;
 }
-.search-box input {
-    color: #888888;
-    background: #FFF;
-    border:0;
-    outline: none !important;
-    transition: all 0.2s linear;
+
+.navbar-right {
+  float: right;
 }
-.text-center {
+
+.navbar-default .navbar-brand {
+  color: #696969 !important;
 }
-.text-center:link, .btn-search:visited {
+
+.navbar-default .navbar-nav>li>a {
+  color: #696969 !important;
 }
-.text-center:active, .btn-search:hover {
-    
+
+.col-xs-6 {
+  float: none !important;
+  margin-left: auto;
+  margin-right: auto;
 }
-.btn-search {
-      background: #424242;
-      border-radius: 1;
-      margin: 0;
-      color: #fff;
-      text-align: center;
-      border-width: 1px;
-      border-style: solid;
-      border-color: #1c1c1c;
-    }
-.btn-search:link, .btn-search:visited {
-      color: #fff;
+
+.center-block {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 200px;
+  margin-bottom: 20px;
 }
-.btn-search:active, .btn-search:hover {
-      background: #1c1c1c;
-      color: #fff;
+
+.btn-group-wrap {
+  text-align: center;
+  margin-top: 30px;
+}
+
+div.btn-group {
+  margin: 0 auto;
+  text-align: center;
+  width: inherit;
+  display: inline-block;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.btn-primary {
+  color: #696969 !important;
+  background-color: #ecf0f1 !important;
+  border-color: #ecf0f1 !important;
 }
