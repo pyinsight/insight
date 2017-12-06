@@ -2,17 +2,24 @@ import praw
 import nltk
 from secrets import REDDIT_CREDENTIALS
 from nltk.classify import NaiveBayesClassifier
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 nltk.download('punkt')
+nltk.download('vader_lexicon')
 
 class Comment:
 
     """Comment class to store and calculate the sentiment of the comment"""
 
-    def __init__(self, text, classifier):
+    def __init__(self, text, score, classifier):
         self.text = text
         self.sentiment = None
         self.classifier = classifier
+        self.score = score
+
+        self.neg_sentiment = 0.0
+        self.pos_sentiment = 0.0
+        self.over_sentiment = 0.0
 
         """calls sentiment calculation for the comment text"""
 
@@ -21,7 +28,16 @@ class Comment:
     """gets the sentiment of the comment"""
 
     def calculate_sentiment(self):
-        self.sentiment = self.classifier.classify(format_sentence(self.text))
+        sentiment_scores = self.classifier.polarity_scores(self.text)
+
+        self.neg_sentiment = sentiment_scores['neg']
+        self.pos_sentiment = sentiment_scores['pos']
+        self.over_sentiment = sentiment_scores['compound']
+
+    """gets the upvotes of the comment object"""
+
+    def get_score(self):
+        return self.score
 
     """turns comment object into a string"""
 
@@ -40,13 +56,16 @@ class Thread:
         self.submission = self.reddit.submission(url=link)
         self.classifier = classifier
         self.average = 0.0
+        self.title = self.submission.title
 
     """gets each comment from the thread based on the link"""
 
     def get_comments(self):
-        self.submission.comments.replace_more(limit=None)
-        for comment in self.submission.comments.list():
-            self.comments.append(Comment(comment.body, self.classifier))
+        self.submission.comments.replace_more(limit=100)
+        for comment in self.submission.comments:
+            # possibly change this to only count if count has a positive score
+            self.comments.append(Comment(comment.body, comment.score, self.classifier))
+
 
     """prints all comments stored in thread currently"""
 
@@ -60,12 +79,8 @@ class Thread:
     """
 
     def get_title_sentiment(self):
-        title_sentiment = self.classifier.classify(format_sentence(self.submission.title))
-
-        if title_sentiment is "pos":
-            return 1
-        else:
-            return 0
+        title_sentiment = self.classifier.polarity_scores(self.title)
+        return title_sentiment['compound']
 
     """average the positivity or negativity of the whole thread"""
 
@@ -74,24 +89,25 @@ class Thread:
             return None
 
         total = 0.0
+        total_score = 0
 
         for comment in self.comments:
-            if comment.sentiment is "pos":
-                total += 3
+            total += comment.over_sentiment
 
         # get comment average sentiment
         
-        average_comments = total / self.submission.num_comments
+        average_comments = total / len(self.comments)
 
         # title sentiment
         
         title_sentiment = self.get_title_sentiment()
 
+
         # total sentiment with title weighed as 50% of the average sentimentn of the post
         
         total_sentiment = title_sentiment * .5 + average_comments * .5
 
-        return total_sentiment
+        return total_sentiment * 1000
 
 
 def format_sentence(sent):
@@ -101,26 +117,15 @@ def format_sentence(sent):
 
 def setup_classifier():
     """set up classifier and train it with the dater"""
-    pos = []
-    with open("./pos-list.txt") as f:
-        for i in f:
-            pos.append([format_sentence(i), 'pos'])
 
-    neg = []
-    with open("./neg-list.txt") as f:
-        for i in f:
-            neg.append([format_sentence(i), 'neg'])
-
-    training = pos[:int((.8)*len(pos))] + neg[:int((.8)*len(neg))]
-    test = pos[int((.8)*len(pos)):] + neg[int((.8)*len(neg)):]
-
-    return NaiveBayesClassifier.train(training)
+    return SentimentIntensityAnalyzer()
 
 
 class SubmissionSentimizer:
     """Simple class that allows sentiment analysis on reddit posts"""
     def __init__(self):
         self.classifier = setup_classifier()
+
         self.reddit = praw.Reddit(
             user_agent=REDDIT_CREDENTIALS['user_agent'],
             client_id=REDDIT_CREDENTIALS['user_id'],
@@ -136,7 +141,10 @@ class SubmissionSentimizer:
 
 if __name__ == '__main__':
 
-    link = "https://www.reddit.com/r/wholesomebpt/comments/7hbjj0/just_marry_him_already/"
+    link = "https://www.reddit.com/r/television/comments/7hsy5f/terry_crews_sues_wme_agent_adam_venit_for_sexual/"
     ss = SubmissionSentimizer()
+    
     print(ss.get_sentiment(link))
+
+
 
