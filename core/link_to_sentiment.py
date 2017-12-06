@@ -54,6 +54,19 @@ class Thread:
         for comment in self.comments:
             print(comment)
 
+    """gets the average positivity of negativity of the thread title
+        returns 0 if neg
+        returns 1 if pos
+    """
+
+    def get_title_sentiment(self):
+        title_sentiment = self.classifier.classify(format_sentence(self.submission.title))
+
+        if title_sentiment is "pos":
+            return 1
+        else:
+            return 0
+
     """average the positivity or negativity of the whole thread"""
 
     def average_sentiments(self):
@@ -64,13 +77,21 @@ class Thread:
 
         for comment in self.comments:
             if comment.sentiment is "pos":
-                total += 1
+                total += 3
 
-        average = total / self.submission.num_comments
+        # get comment average sentiment
+        
+        average_comments = total / self.submission.num_comments
 
-        return average
+        # title sentiment
+        
+        title_sentiment = self.get_title_sentiment()
 
+        # total sentiment with title weighed as 50% of the average sentimentn of the post
+        
+        total_sentiment = title_sentiment * .5 + average_comments * .5
 
+        return total_sentiment
 
 
 def format_sentence(sent):
