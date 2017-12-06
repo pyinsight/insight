@@ -9,77 +9,15 @@ import praw
 import time
 from datetime import datetime, timedelta
 from utils.redisqueue import RedisQueue
+from utils.elasticsearch_utils import create_submissions_index
 from link_to_sentiment import SubmissionSentimizer
 from secrets import REDDIT_CREDENTIALS
-
-
-def create_submissions_index(client):
-    submission_mapping = {
-        'submission': {
-            'properties': {
-                'author': {'type': 'text'},
-                'created_utc': {
-                    'type': 'date',
-                    'format': 'epoch_second',
-                },
-                'domain': {
-                    'type': 'text',
-                },
-                'downs': {
-                    'type': 'integer',
-                },
-                'id': {
-                    'type': 'text',
-                },
-                'num_comments': {
-                    'type': 'integer',
-                },
-                'score': {
-                    'type': 'integer',
-                },
-                'selftext': {
-                    'type': 'text',
-                },
-                'sentiment': {
-                    'type': 'float',
-                },
-                'subreddit': {
-                    'type': 'text',
-                },
-                'subreddit_id': {
-                    'type': 'text',
-                },
-                'thumbnail': {
-                    'type': 'text',
-                },
-                'title': {
-                    'type': 'text',
-                },
-                'ups': {
-                    'type': 'integer',
-                },
-                'url': {
-                    'type': 'text',
-                }
-            }
-        }
-    }
-
-    body = {'mappings': submission_mapping}
-
-    try:
-        print('Creating submission index')
-        es_client.indices.create(index='reddit', body=body)
-    except es.exceptions.TransportError as e:
-        if e.error != 'index_already_exists_exception':
-            raise
 
 
 def index_submission(es_client, submission):
     try:
         print(f'Indexing {submission["score"]}--{submission["title"]}')
         submission['created_utc'] = int(submission['created_utc'])
-        print(submission['thumbnail'])
         es_client.index(index='reddit', doc_type='submission', id=submission['id'], body=submission)
     except (ValueError, IndexError, es.ElasticsearchException) as e:
         print(e)
