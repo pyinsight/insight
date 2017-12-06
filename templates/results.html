@@ -1,42 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/search.css')}}">
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/results.css')}}">
+  <link href="{{ url_for('static', filename='open-iconic-master/font/css/open-iconic.css') }}" rel="stylesheet">
 </head>
 <body>
-   
-    <!--<label> <input type="radio" name="politics"> Politics</label>-->
-              <div class="col-md-12 text-center" id="subreddits"> 
-              <label class="checkbox-inline active"> <input type="checkbox" checked="checked" id="allsubs" value="all"> All Subreddits</label>
-              <label class="checkbox-inline"> <input type="checkbox" id= "worldnews" value="worldnews"> World News</label>
-              <label class="checkbox-inline"> <input type="checkbox" id="news" value="news">News</label>
-              <label class="checkbox-inline"> <input type="checkbox" id="politics" value="politics"> Politics</label>
-            </div>
-    <div id="txtAge" style="display:none">Age is something</div>
-    <div class="container">
-        <div class="list-group">
-          {% for hit in hits %}
-            <a href={{ hit['_source']['url'] }}
-               class="list-group-item list-group-item-action d-flex flex-row justify-content-left">
-            <img  class="mr-3" style="height:75px; width:90px;" src={{ hit['_source']['thumbnail'] if hit['_source']['thumbnail'] else 'default'}}>
-            <div class="d-flex flex-column justify-content-start">
-              <h5 >{{ hit['_source']['title'] }}</h5>
-              {{ hit['_source']['num_comments'] }} comments
-            </div>
-            <small class="ml-auto mb-1">3 days ago</small>
-          </a>
-          {% endfor %}
+
+  <div class="wrapper">
+    <!-- Sidebar Holder -->
+    <nav id="sidebar">
+      <div class="sidebar-header">
+        <h3>Results</h3>
+      </div>
+      <ul class="list-unstyled components">
+        <p>Filters</p>
+
+
+
+        <li class="active">
+          <a href="#subredditSubmenu" data-toggle="collapse" aria-expanded="false">Subreddits <span class="oi" data-glyph="chevron-bottom" title="chevron bottom" aria-hidden="true"></span></span></a>
+          <ul class="collapse list-unstyled" id="subredditSubmenu">
+            <label class="btn btn-primary">
+              <input type="checkbox" class="subreddit-checkbox" id="all" checked autocomplete="off"> All subreddits
+            </label>
+            {% for subreddit, freq in subreddits %}
+              <label class="btn btn-primary">
+                <input type="checkbox" autocomplete="off" class="subreddit-checkbox" id="{{subreddit
+              }}"> r/{{ subreddit }} ({{freq}})
+            </label>
+            {% endfor %}
+          </ul>
+        </li>
+        <li>
+          <a href="#">About</a>
+          <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false">Pages</a>
+          <ul class="collapse list-unstyled" id="pageSubmenu">
+            <li><a href="#">Page 1</a></li>
+            <li><a href="#">Page 2</a></li>
+            <li><a href="#">Page 3</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#">Portfolio</a>
+        </li>
+        <li>
+          <a href="#">Contact</a>
+        </li>
+      </ul>
+
+      <ul class="list-unstyled CTAs">
+        <li><a href="https://github.com/pyinsight/insight" class="download">Source code</a></li>
+        <li><a href="http://localhost:5000" class="article">Back to search</a></li>
+      </ul>
+    </nav>
+
+    <!-- Page Content Holder -->
+    <div id="content">
+      <!--
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+
+          <div class="navbar-header">
+            <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+              <i class="glyphicon glyphicon-align-left"></i>
+              <span>Toggle Sidebar</span>
+            </button>
+          </div>
+
+
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="#">Page</a></li>
+              <li><a href="#">Page</a></li>
+              <li><a href="#">Page</a></li>
+              <li><a href="#">Page</a></li>
+            </ul>
+          </div>
         </div>
+      </nav>
+      -->
 
-    </div>
+      <div class="list-group">
+        {% for hit in hits %}
+          <a href={{ hit['_source']['url'] }}
+             class="list-group-item list-group-item-action d-flex flex-row justify-content-left">
+          <img  class="mr-3" style="height:75px; width:90px;" src={{ hit['_source']['thumbnail'] if hit['_source']['thumbnail'] else 'default'}}>
+          <div class="d-flex flex-column justify-content-start">
+            <h5 >{{ hit['_source']['title'] }}</h5>
+            {{ hit['_source']['num_comments'] }} comments
+          </div>
+          <small class="ml-auto mb-1">3 days ago</small>
+        </a>
+        {% endfor %}
+      </div>
+  </div>
 
-    <!-- Bootstrap JS CDN -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-    <script src={{ url_for('static', filename='js/results.js')}}></script>
+  <!-- Bootstrap JS CDN -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+  <script src={{ url_for('static', filename='js/results.js')}}></script>
 </body>
 </html>
