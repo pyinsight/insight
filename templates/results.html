@@ -83,8 +83,9 @@
       </nav>
       -->
 
-      <div class="list-group">
+      <div class="list-group" id="hits">
         {% for hit in hits %}
+        <div class="wrap {{hit['_source']['subreddit']}}">
           <a href={{ hit['_source']['url'] }}
              class="list-group-item list-group-item-action d-flex flex-row justify-content-left">
           <img  class="mr-3" style="height:75px; width:90px;" src={{ hit['_source']['thumbnail'] if hit['_source']['thumbnail'] else 'default'}}>
@@ -94,6 +95,8 @@
           </div>
           <small class="ml-auto mb-1">3 days ago</small>
         </a>
+        </div>
+
         {% endfor %}
       </div>
   </div>
