@@ -110,11 +110,6 @@ class Thread:
         return total_sentiment * 1000
 
 
-def format_sentence(sent):
-    """tokenizes the reddit comment"""
-    return({word: True for word in nltk.word_tokenize(sent)})
-
-
 def setup_classifier():
     """set up classifier and train it with the dater"""
 
