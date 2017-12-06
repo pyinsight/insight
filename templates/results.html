@@ -85,10 +85,15 @@
 
       <div class="list-group" id="hits">
         {% for hit in hits %}
-        <div class="wrap {{hit['_source']['subreddit']}}">
+        <div class="wrap {{hit['_source']['subreddit']}}"
+             data-score="{{hit['_source']['score']}}"
+             data-created="{{hit['_source']['created_utc']}}"
+             data-relevance="{{hit['_score']}}"
+             data-sentiment="{{hit['_source']['sentiment']}}">
           <a href={{ hit['_source']['url'] }}
              class="list-group-item list-group-item-action d-flex flex-row justify-content-left">
-          <img  class="mr-3" style="height:75px; width:90px;" src={{ hit['_source']['thumbnail'] if hit['_source']['thumbnail'] else 'default'}}>
+          <img  class="mr-3" style="height:75px; width:90px;"
+                src={{ hit['_source']['thumbnail'] if  '.com' in hit['_source']['thumbnail'] else url_for("static", filename="images/default.png")}}>
           <div class="d-flex flex-column justify-content-start">
             <h5 >{{ hit['_source']['title'] }}</h5>
             {{ hit['_source']['num_comments'] }} comments
