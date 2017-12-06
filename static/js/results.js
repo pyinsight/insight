@@ -21,6 +21,14 @@ function uncheckAllBoxes(){
     });
 }
 
+function uncheckOtherSortBoxes(checkedId) {
+    var $checkboxes = $('#sortSubmenu').find('input');
+    $checkboxes.each(function(idx, input){
+        if ( $(input).prop('id') !== checkedId)
+            $(input).prop('checked', false);
+    });
+}
+
 function showHitsBySubreddit(subreddit){
     $(`#hits>div[class*=${subreddit}]`).show();
 }
@@ -50,7 +58,35 @@ $(function() {
                 showHitsBySubreddit(e.target.id);
             }
             else {
-                hideHitsBySubreddit(e.target.id);            }
+                hideHitsBySubreddit(e.target.id);
+            }
         }
-  })
+    });
+
+    $('#sortSubmenu>label>input').on('click', function(e){
+        let sortAttr = e.target.id.split('-')[2];
+        let sortAscending = false;
+        console.log(`Sorting on ${sortAttr}`);
+        uncheckOtherSortBoxes(e.target.id);
+        let $hits = $(`#hits>div[class*=hit`);
+        $hits.sort(function(a, b){
+            let an = a.getAttribute(`data-${sortAttr}`), bn = b.getAttribute(`data-${sortAttr}`);
+            let mult = 1;
+            if (!sortAscending) mult = -1;
+            if (an > bn)
+                return 1*mult;
+            if (an < bn)
+                return -1*mult;
+            return 0;
+        });
+
+        $hits.detach().appendTo($('#hits'));
+        $hits = $(`#hits>div[class*=hit`);
+        $hits.each(function(idx, div){
+            console.log($(div).attr(`data-${sortAttr}`));
+        });
+    });
+
+
+
 });

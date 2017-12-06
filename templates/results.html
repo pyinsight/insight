@@ -19,8 +19,8 @@
         <p>Filters</p>
 
 
-
-        <li class="active">
+        <!-- Subreddit filter nav iterm -->
+        <li class="">
           <a href="#subredditSubmenu" data-toggle="collapse" aria-expanded="false">Subreddits <span class="oi" data-glyph="chevron-bottom" title="chevron bottom" aria-hidden="true"></span></span></a>
           <ul class="collapse list-unstyled" id="subredditSubmenu">
             <label class="btn btn-primary">
@@ -34,8 +34,29 @@
             {% endfor %}
           </ul>
         </li>
+
+        <!-- Sort by nav item-->
+        <li class="">
+          <a href="#sortSubmenu" data-toggle="collapse" aria-expanded="false">Sort by <span class="oi" data-glyph="chevron-bottom" title="chevron bottom" aria-hidden="true"></span></span></a>
+          <ul class="collapse list-unstyled" id="sortSubmenu">
+            <label class="btn btn-primary">
+              <input type="checkbox" class="sort-checkbox" id="sort-by-score-btn" autocomplete="off"> Score
+            </label>
+
+            <label class="btn btn-primary">
+              <input type="checkbox" class="sort-checkbox" id="sort-by-relevance-btn" autocomplete="off"> Relevance
+            </label>
+
+            <label class="btn btn-primary">
+            <input type="checkbox" class="sort-checkbox" id="sort-by-time-btn" autocomplete="off"> Submission time
+            </label>
+
+
+
+          </ul>
+        </li>
+
         <li>
-          <a href="#">About</a>
           <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false">Pages</a>
           <ul class="collapse list-unstyled" id="pageSubmenu">
             <li><a href="#">Page 1</a></li>
@@ -85,9 +106,9 @@
 
       <div class="list-group" id="hits">
         {% for hit in hits %}
-        <div class="wrap {{hit['_source']['subreddit']}}"
+        <div class="hit {{hit['_source']['subreddit']}}"
              data-score="{{hit['_source']['score']}}"
-             data-created="{{hit['_source']['created_utc']}}"
+             data-time="{{hit['_source']['created_utc']}}"
              data-relevance="{{hit['_score']}}"
              data-sentiment="{{hit['_source']['sentiment']}}">
           <a href={{ hit['_source']['url'] }}

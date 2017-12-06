@@ -232,3 +232,19 @@ a.article, a.article:hover {
         display: none;
     }
 }
+
+/* ---------------------------------------------------
+    CHECKBOX STYLE
+----------------------------------------------------- */
+.custom-control-input:checked ~ .custom-control-indicator {
+        background-color: #ffa500;
+}
+
+.custom-control-input:focus~.custom-control-indicator {
+    -webkit-box-shadow: 0 0 0 1px #fff, 0 0 0 3px #0275d8;
+    box-shadow: 0;
+}
+
+.custom-checkbox .custom-control-indicator {
+    border-radius: 1em;
+}
