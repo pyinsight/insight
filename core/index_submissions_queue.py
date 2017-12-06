@@ -17,19 +17,19 @@ def create_submissions_index(client):
     submission_mapping = {
         'submission': {
             'properties': {
-                'author': {'type': 'string'},
+                'author': {'type': 'text'},
                 'created_utc': {
                     'type': 'date',
                     'format': 'epoch_second',
                 },
                 'domain': {
-                    'type': 'string',
+                    'type': 'text',
                 },
                 'downs': {
                     'type': 'integer',
                 },
                 'id': {
-                    'type': 'string',
+                    'type': 'text',
                 },
                 'num_comments': {
                     'type': 'integer',
@@ -44,22 +44,22 @@ def create_submissions_index(client):
                     'type': 'float',
                 },
                 'subreddit': {
-                    'type': 'string',
+                    'type': 'text',
                 },
                 'subreddit_id': {
-                    'type': 'string',
+                    'type': 'text',
                 },
                 'thumbnail': {
-                    'type': 'string',
+                    'type': 'text',
                 },
                 'title': {
-                    'type': 'string',
+                    'type': 'text',
                 },
                 'ups': {
                     'type': 'integer',
                 },
                 'url': {
-                    'type': 'string',
+                    'type': 'text',
                 }
             }
         }
@@ -79,6 +79,7 @@ def index_submission(es_client, submission):
     try:
         print(f'Indexing {submission["score"]}--{submission["title"]}')
         submission['created_utc'] = int(submission['created_utc'])
+        print(submission['thumbnail'])
         es_client.index(index='reddit', doc_type='submission', id=submission['id'], body=submission)
     except (ValueError, IndexError, es.ElasticsearchException) as e:
         print(e)
