@@ -7,6 +7,15 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/search.css')}}">
 </head>
 <body>
+   
+    <!--<label> <input type="radio" name="politics"> Politics</label>-->
+              <div class="col-md-12 text-center" id="subreddits"> 
+              <label class="checkbox-inline active"> <input type="checkbox" checked="checked" id="allsubs" value="all"> All Subreddits</label>
+              <label class="checkbox-inline"> <input type="checkbox" id= "worldnews" value="worldnews"> World News</label>
+              <label class="checkbox-inline"> <input type="checkbox" id="news" value="news">News</label>
+              <label class="checkbox-inline"> <input type="checkbox" id="politics" value="politics"> Politics</label>
+            </div>
+    <div id="txtAge" style="display:none">Age is something</div>
     <div class="container">
         <div class="list-group">
           {% for hit in hits %}
@@ -21,11 +30,13 @@
           </a>
           {% endfor %}
         </div>
+
     </div>
 
     <!-- Bootstrap JS CDN -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    <script src={{ url_for('static', filename='js/results.js')}}></script>
 </body>
 </html>
