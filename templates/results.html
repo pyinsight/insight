@@ -51,6 +51,14 @@
             <input type="checkbox" class="sort-checkbox" id="sort-by-time-btn" autocomplete="off"> Submission time
             </label>
 
+            <label class="btn btn-primary">
+            <input type="checkbox" class="sort-checkbox" id="sort-by-positive-btn" autocomplete="off"> Positive sentiment
+            </label>
+
+            <label class="btn btn-primary">
+            <input type="checkbox" class="sort-checkbox" id="sort-by-negative-btn" autocomplete="off"> Negative sentiment
+            </label>
+
 
 
           </ul>
@@ -68,29 +76,6 @@
 
     <!-- Page Content Holder -->
     <div id="content">
-      <!--
-      <nav class="navbar navbar-default">
-        <div class="container-fluid">
-
-          <div class="navbar-header">
-            <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
-              <i class="glyphicon glyphicon-align-left"></i>
-              <span>Toggle Sidebar</span>
-            </button>
-          </div>
-
-
-          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="#">Page</a></li>
-              <li><a href="#">Page</a></li>
-              <li><a href="#">Page</a></li>
-              <li><a href="#">Page</a></li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-      -->
 
       <div class="list-group" id="hits">
         {% for hit in hits %}
@@ -98,23 +83,34 @@
              data-score="{{hit['_source']['score']}}"
              data-time="{{hit['_source']['created_utc']}}"
              data-relevance="{{hit['_score']}}"
-             data-sentiment="{{hit['_source']['sentiment']}}">
-          <div class="list-group-item list-group-item-action d-flex flex-row justify-content-left"
+             data-sentiment="{{hit['_source']['sentiment']}}"
+             data-positive="{{hit['_source']['sentiment']}}"
+             data-negative="{{hit['_source']['sentiment']}}">
+          <div class="list-group-item list-group-item-action d-flex flex-row justify-content-start align-items-center"
             data-score="{{hit['_source']['score']}}"
             data-time="{{hit['_source']['created_utc']}}"
             data-relevance="{{hit['_score']}}"
             data-sentiment="{{hit['_source']['sentiment']}}">
+            <div class="score-div d-flex flex-row justify-content-center align-items-center mr-3">
+              {{hit['_source']['score']}}
+            </div>
+
+
             <img  class="mr-3" style="height:75px; width:90px;"
             src={{ hit['_source']['thumbnail'] if  '.com' in hit['_source']['thumbnail'] else url_for("static", filename="images/default.png")}}>
-            <div class="d-flex flex-row justify-content-start">
-              <div style="max-width: 600px; word-wrap: break-word;">
+            <div class="d-flex flex-row justify-content-start" >
+              <div class="d-flex flex-column" style="max-width: 600px; word-wrap: break-word;">
                 <a href={{ hit['_source']['url'] }}>
-                  <h5>{{ hit['_source']['title'] }}</h5>
+                  <h5 class="title-heading">{{ hit['_source']['title'] }}</h5>
                 </a>
-                <a href="http://reddit.com/{{hit['_source']['id']}}"
-                   class="comments-url">
+                <div class="d-flex flex-row">
+                  <a href="http://reddit.com/{{hit['_source']['id']}}"
+                   class="comments-url mr-3 ">
                   {{ hit['_source']['num_comments'] }} comments
-                </a>
+                  </a>
+                  <strong class="sentiment-score">{{ hit['_source']['sentiment'] | sentiment | safe }}</strong>
+                </div>
+
               </div>
             </div>
             <small class="ml-auto mb-1">{{hit['_source']['created_utc'] | epoch}}</small>

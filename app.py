@@ -14,7 +14,7 @@ def index():
 
 
 @app.route('/search', methods=['GET', 'POST'])
-def search():
+def results():
     query = request.args.get('q')
     hits = simple_search(query)
     return render_template('results.html', hits=hits, subreddits=top_subreddits(hits))
@@ -53,3 +53,23 @@ def format_epoch(t):
     if hours:
         return f'{hours} hour{"s" if hours > 1 else ""} ago'
     return f'{minutes} minute{"s" if minutes > 1 else ""} ago'
+
+
+@app.template_filter('sentiment')
+def format_sentiment(s):
+    if s is None:
+        return 'No sentiment available'
+    if (0.25 >= s >= -0.25):
+        ret = 'Neutral'
+    elif s <= -.25:
+        if s <= -.65:
+            ret = 'Confidently negative'
+        else:
+            ret = 'Negative'
+    else:
+        if s >= .65:
+            ret = 'Confidently positive'
+        else:
+            ret = 'Positive'
+    ret += f' ({s:.2f})'
+    return ret

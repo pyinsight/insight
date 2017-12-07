@@ -45,12 +45,20 @@ a, a:hover, a:focus {
 a.comments-url:hover {
     text-decoration: underline;
 }
+a.comments-url {
+    font-size: .8em;
+    margin-top: auto;
+}
+
+.sentiment-score {
+    font-size: .8em;
+}
 
 /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */
 #sidebar {
-    width: 250px;
+    width: 225px;
     position: fixed;
     top: 0;
     left: 0;
@@ -202,7 +210,7 @@ a.article, a.article:hover {
     CONTENT STYLE
 ----------------------------------------------------- */
 #content {
-    width: calc(100% - 250px);
+    width: calc(100% - 200px);
     padding: 40px;
     min-height: 100vh;
     transition: all 0.3s;
@@ -216,6 +224,25 @@ a.article, a.article:hover {
 }
 #content.small {
     text-align: right;
+}
+
+#hits {
+    mid-width: 100%;
+    max-width: 100%;
+}
+
+
+.score-div{
+    text-align: center;
+    vertical-align: middle;
+    line-height: 90px;
+    font-size: 1em;
+    min-width: 40px;
+    min-height: 40px;
+}
+
+.title-heading{
+    font-size: 1.1em;
 }
 
 /* ---------------------------------------------------

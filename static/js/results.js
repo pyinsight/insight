@@ -31,12 +31,21 @@ function uncheckOtherSortBoxes(checkedId) {
 }
 
 function showHitsBySubreddit(subreddit){
-    $(`#hits>div[class*=${subreddit}]`).show();
+    $(`#hits>div.${subreddit}`).show();
 }
 
 function hideHitsBySubreddit(subreddit){
-    $(`#hits>div[class*=${subreddit}]`).hide();
+     $(`#hits>div.${subreddit}`).show();
 }
+
+function hideHitsWithoutSentiment(hits){
+     $(`#hits>div[data-sentiment=${"None"}`).hide();
+}
+
+function showHitsWithoutSentiment(hits){
+     $(`#hits>div[data-sentiment=${"None"}`).show();
+}
+
 
 $(function() {
     $(".subreddit-checkbox").on("click", function(e){
@@ -66,29 +75,33 @@ $(function() {
 
     $('#sortSubmenu>label>input').on('click', function(e){
         let sortAttr = e.target.id.split('-')[2];
-        let sortAscending = false;
-        console.log(`Sorting on ${sortAttr}`);
+        let sortAscending =  sortAttr == 'negative' ? true: false;
         uncheckOtherSortBoxes(e.target.id);
         let $hits = $(`#hits>div[class*=hit`);
+        if (sortAttr == 'positive' || sortAttr == 'negative')
+            hideHitsWithoutSentiment($hits);
+        else
+            showHitsWithoutSentiment($hits);
         $hits.sort(function(a, b){
-            let an = a.getAttribute(`data-${sortAttr}`), bn = b.getAttribute(`data-${sortAttr}`);
-            let mult = 1;
-            if (!sortAscending) mult = -1;
-            if (an > bn)
-                return 1*mult;
-            if (an < bn)
-                return -1*mult;
-            return 0;
+            let an = parseFloat(a.getAttribute(`data-${sortAttr}`)),
+                     bn = parseFloat(b.getAttribute(`data-${sortAttr}`));
+            if (isNaN(an))
+                return 1;
+            else if (isNaN(bn))
+                return -1;
+            else if (an == bn)
+                return 0;
+            else if (sortAscending)
+                return an < bn ? -1 : 1;
+            else if (!sortAscending)
+                return an < bn ? 1  : -1;
         });
 
 
         $hits.detach().appendTo($('#hits'));
-        $hits = $(`#hits>div[class*=hit`);
+        $hits = $(`#hits>div[class*=hit]`);
         $hits.each(function(idx, div){
             console.log($(div).attr(`data-${sortAttr}`));
         });
     });
-
-
-
 });
