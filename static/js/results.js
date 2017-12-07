@@ -1,6 +1,7 @@
 function hideAllHits(hits) {
     console.log('Hiding all hits');
     hits.each(function(idx, div){
+        console.log(idx);
         $(div).hide();
     });
 }
@@ -39,7 +40,7 @@ function hideHitsBySubreddit(subreddit){
 
 $(function() {
     $(".subreddit-checkbox").on("click", function(e){
-        var hits = $('#hits').find('div');
+        var hits = $('#hits').find('div.hit');
         if (e.target.id == 'all'){
             uncheckAllBoxes();
             if (e.target.checked){
@@ -79,6 +80,7 @@ $(function() {
                 return -1*mult;
             return 0;
         });
+
 
         $hits.detach().appendTo($('#hits'));
         $hits = $(`#hits>div[class*=hit`);
