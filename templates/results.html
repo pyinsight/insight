@@ -27,103 +27,80 @@
               <input type="checkbox" class="subreddit-checkbox" id="all" checked autocomplete="off"> All subreddits
             </label>
             {% for subreddit, freq in subreddits %}
-              <label class="btn btn-primary">
-                <input type="checkbox" autocomplete="off" class="subreddit-checkbox" id="{{subreddit
-              }}"> r/{{ subreddit }} ({{freq}})
-            </label>
-            {% endfor %}
-          </ul>
-        </li>
-
-        <!-- Sort by nav item-->
-        <li class="">
-          <a href="#sortSubmenu" data-toggle="collapse" aria-expanded="false">Sort by <span class="oi" data-glyph="chevron-bottom" title="chevron bottom" aria-hidden="true"></span></span></a>
-          <ul class="collapse list-unstyled" id="sortSubmenu">
             <label class="btn btn-primary">
-              <input type="checkbox" class="sort-checkbox" id="sort-by-score-btn" autocomplete="off"> Score
-            </label>
+              <input type="checkbox" autocomplete="off" class="subreddit-checkbox" id="{{subreddit
+            }}"> r/{{ subreddit }} ({{freq}})
+          </label>
+          {% endfor %}
+        </ul>
+      </li>
 
-            <label class="btn btn-primary">
-              <input type="checkbox" class="sort-checkbox" id="sort-by-relevance-btn" autocomplete="off"> Relevance
-            </label>
+      <!-- Sort by nav item-->
+      <li class="">
+        <a href="#sortSubmenu" data-toggle="collapse" aria-expanded="false">Sort by <span class="oi" data-glyph="chevron-bottom" title="chevron bottom" aria-hidden="true"></span></span></a>
+        <ul class="collapse list-unstyled" id="sortSubmenu">
+          <label class="btn btn-primary">
+            <input type="checkbox" class="sort-checkbox" id="sort-by-score-btn" autocomplete="off"> Score
+          </label>
 
-            <label class="btn btn-primary">
+          <label class="btn btn-primary">
+            <input type="checkbox" class="sort-checkbox" id="sort-by-relevance-btn" autocomplete="off"> Relevance
+          </label>
+
+          <label class="btn btn-primary">
             <input type="checkbox" class="sort-checkbox" id="sort-by-time-btn" autocomplete="off"> Submission time
-            </label>
+          </label>
 
 
 
-          </ul>
-        </li> 
-        <li>
-          <a href="#">Contact</a>
-        </li>
-      </ul>
+        </ul>
+      </li>
+      <li>
+        <a href="#">Contact</a>
+      </li>
+    </ul>
 
-      <ul class="list-unstyled CTAs">
-        <li><a href="https://github.com/pyinsight/insight" class="download">Source code</a></li>
-        <li><a href="http://localhost:5000" class="article">Back to search</a></li>
-      </ul>
-    </nav>
+    <ul class="list-unstyled CTAs">
+      <li><a href="https://github.com/pyinsight/insight" class="download">Source code</a></li>
+      <li><a href="http://localhost:5000" class="article">Back to search</a></li>
+    </ul>
+  </nav>
 
-    <!-- Page Content Holder -->
-    <div id="content">
-      <!--
-      <nav class="navbar navbar-default">
-        <div class="container-fluid">
+  <!-- Page Content Holder -->
+  <div id="content">
 
-          <div class="navbar-header">
-            <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
-              <i class="glyphicon glyphicon-align-left"></i>
-              <span>Toggle Sidebar</span>
-            </button>
-          </div>
+    <div class="list-group" id="hits">
+      {% for hit in hits %}
+      <div class="list-group-item list-group-item-action d-flex flex-row justify-content-left hit {{hit['_source']['subreddit']}}"
+      data-score="{{hit['_source']['score']}}"
+      data-time="{{hit['_source']['created_utc']}}"
+      data-relevance="{{hit['_score']}}"
+      data-sentiment="{{hit['_source']['sentiment']}}">
 
-
-          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="#">Page</a></li>
-              <li><a href="#">Page</a></li>
-              <li><a href="#">Page</a></li>
-              <li><a href="#">Page</a></li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-      -->
-
-      <div class="list-group" id="hits">
-        {% for hit in hits %}
-        <div class="hit {{hit['_source']['subreddit']}}"
-             data-score="{{hit['_source']['score']}}"
-             data-time="{{hit['_source']['created_utc']}}"
-             data-relevance="{{hit['_score']}}"
-             data-sentiment="{{hit['_source']['sentiment']}}">
-          <a href={{ hit['_source']['url'] }}
-             class="list-group-item list-group-item-action d-flex flex-row justify-content-left">
-          <img  class="mr-3" style="height:75px; width:90px;"
-                src={{ hit['_source']['thumbnail'] if  '.com' in hit['_source']['thumbnail'] else url_for("static", filename="images/default.png")}}>
-          <div class="d-flex flex-column justify-content-start">
-            <div style="max-width: 600px; word-wrap: break-word;">
+      <img  class="mr-3" style="height:75px; width:90px;"
+      src={{ hit['_source']['thumbnail'] if  '.com' in hit['_source']['thumbnail'] else url_for("static", filename="images/default.png")}}>
+      <div class="d-flex flex-row justify-content-start">
+        <div style="max-width: 600px; word-wrap: break-word;">
+          <a href={{ hit['_source']['url'] }}>
             <h5>{{ hit['_source']['title'] }}</h5>
+          </a>
+          <a href="http://reddit.com/{{hit['_source']['id']}}"
+             class="comments-url">
             {{ hit['_source']['num_comments'] }} comments
+          </a>
 
-          </div>
-
-
-      		</div>
-      		<small class="ml-auto mb-1">3 days ago</small>
-        </a>
         </div>
-
-        {% endfor %}
       </div>
+      <small class="ml-auto mb-1">{{hit['_source']['created_utc'] | epoch}}</small>
+    </div>
+    {% endfor %}
   </div>
+</div>
 
-  <!-- Bootstrap JS CDN -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-  <script src={{ url_for('static', filename='js/results.js')}}></script>
+<!-- Bootstrap JS CDN -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+<script src={{ url_for('static', filename='js/results.js')}}></script>
 </body>
 </html>

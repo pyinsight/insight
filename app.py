@@ -1,17 +1,11 @@
 import elasticsearch as es
 from collections import defaultdict
+from datetime import datetime
 from flask import Flask, render_template, request
 from elasticsearch_dsl import Search
 
 app = Flask(__name__)
 es_client = es.Elasticsearch()
-
-
-def simple_search(q):
-    s = Search(using=es_client, index='reddit') \
-        .query('match', title=q)[:100]
-    resp = s.execute()
-    return resp['hits']['hits']
 
 
 @app.route('/')
@@ -23,9 +17,14 @@ def index():
 def search():
     query = request.args.get('q')
     hits = simple_search(query)
-    return render_template('results.html',
-                           hits=hits,
-                           subreddits=top_subreddits(hits))
+    return render_template('results.html', hits=hits, subreddits=top_subreddits(hits))
+
+
+def simple_search(q):
+    s = Search(using=es_client, index='reddit') \
+        .query('match', title=q)[:100]
+    resp = s.execute()
+    return resp['hits']['hits']
 
 
 def top_subreddits(hits):
@@ -36,3 +35,21 @@ def top_subreddits(hits):
     # sort by freqs descending
     top_subreddits = sorted(subreddit_freqs.items(), key=lambda t: t[1], reverse=True)
     return top_subreddits
+
+
+def days_hours_minutes(td):
+    return td.days, td.seconds // 3600, (td.seconds // 60) % 60
+
+
+@app.template_filter('epoch')
+def format_epoch(t):
+    """ Formats the unix epoch to a user-friendly string denoting how much time has passed since `t` """
+    submission_dt = datetime.fromtimestamp(t)
+    today = datetime.utcnow()
+    delta = today - submission_dt
+    days, hours, minutes = days_hours_minutes(delta)
+    if days:
+        return f'{days} day{"s" if days > 1 else ""} ago'
+    if hours:
+        return f'{hours} hour{"s" if hours > 1 else ""} ago'
+    return f'{minutes} minute{"s" if minutes > 1 else ""} ago'

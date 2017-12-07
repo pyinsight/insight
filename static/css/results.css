@@ -42,6 +42,10 @@ a, a:hover, a:focus {
     margin: 40px 0;
 }
 
+a.comments-url:hover {
+    text-decoration: underline;
+}
+
 /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */
