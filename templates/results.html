@@ -54,19 +54,7 @@
 
 
           </ul>
-        </li>
-
-        <li>
-          <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false">Pages</a>
-          <ul class="collapse list-unstyled" id="pageSubmenu">
-            <li><a href="#">Page 1</a></li>
-            <li><a href="#">Page 2</a></li>
-            <li><a href="#">Page 3</a></li>
-          </ul>
-        </li>
-        <li>
-          <a href="#">Portfolio</a>
-        </li>
+        </li> 
         <li>
           <a href="#">Contact</a>
         </li>
@@ -116,10 +104,15 @@
           <img  class="mr-3" style="height:75px; width:90px;"
                 src={{ hit['_source']['thumbnail'] if  '.com' in hit['_source']['thumbnail'] else url_for("static", filename="images/default.png")}}>
           <div class="d-flex flex-column justify-content-start">
-            <h5 >{{ hit['_source']['title'] }}</h5>
+            <div style="max-width: 600px; word-wrap: break-word;">
+            <h5>{{ hit['_source']['title'] }}</h5>
             {{ hit['_source']['num_comments'] }} comments
+
           </div>
-          <small class="ml-auto mb-1">3 days ago</small>
+
+
+      		</div>
+      		<small class="ml-auto mb-1">3 days ago</small>
         </a>
         </div>
 

@@ -166,7 +166,6 @@ a[aria-expanded="true"]::before {
     content: '\e260';
 }
 
-
 /* Submenu style */
 ul ul a {
     font-size: 0.9em !important;
@@ -205,12 +204,15 @@ a.article, a.article:hover {
     transition: all 0.3s;
     position: absolute;
     top: 0;
+    word-wrap: break-word;
     right: 0;
 }
 #content.active {
     width: 100%;
 }
-
+#content.small {
+    text-align: right;
+}
 
 /* ---------------------------------------------------
     MEDIAQUERIES
