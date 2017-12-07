@@ -47,3 +47,8 @@ class RedisQueue(object):
     def get_nowait(self):
         """Equivalent to get(False)."""
         return self.get(False)
+
+    def clear(self):
+        """ Empties the queue """
+        while self.qsize():
+            self.get()
