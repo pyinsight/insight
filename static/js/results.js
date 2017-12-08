@@ -48,6 +48,7 @@ function showHitsWithoutSentiment(hits){
 
 
 $(function() {
+
     $(".subreddit-checkbox").on("click", function(e){
         var hits = $('#hits').find('div.hit');
         if (e.target.id == 'all'){
@@ -104,4 +105,6 @@ $(function() {
             console.log($(div).attr(`data-${sortAttr}`));
         });
     });
+
+    $('#sort-by-score-btn').click();
 });

@@ -100,12 +100,12 @@
             src={{ hit['_source']['thumbnail'] if  '.com' in hit['_source']['thumbnail'] else url_for("static", filename="images/default.png")}}>
             <div class="d-flex flex-row justify-content-start" >
               <div class="d-flex flex-column" style="max-width: 600px; word-wrap: break-word;">
-                <a href={{ hit['_source']['url'] }}>
+                <a href={{ hit['_source']['url'] }} target="_blank">
                   <h5 class="title-heading">{{ hit['_source']['title'] }}</h5>
                 </a>
                 <div class="d-flex flex-row">
                   <a href="http://reddit.com/{{hit['_source']['id']}}"
-                   class="comments-url mr-3 ">
+                   class="comments-url mr-3 " target="_blank">
                   {{ hit['_source']['num_comments'] }} comments
                   </a>
                   <strong class="sentiment-score">{{ hit['_source']['sentiment'] | sentiment | safe }}</strong>
